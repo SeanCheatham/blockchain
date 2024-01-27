@@ -184,6 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  dart_eval:
+    dependency: "direct main"
+    description:
+      name: dart_eval
+      sha256: "8896832008bb5379caad1c55109ef357566365ec1abb4f49819c79021cc0e0e1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.3"
   dart_style:
     dependency: transitive
     description:
@@ -192,6 +200,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.4"
+  directed_graph:
+    dependency: transitive
+    description:
+      name: directed_graph
+      sha256: cd9b6711bfa4265dae864ef87c68809cc2da5fb4260911caa975c9f33026dc2b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
+  exception_templates:
+    dependency: transitive
+    description:
+      name: exception_templates
+      sha256: "378fa67f37cb1567162cbfd242fafb711e123d8c7127726a67aa5758dc2a8675"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   fast_base58:
     dependency: "direct main"
     description:
@@ -368,6 +392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.1"
+  lazy_memo:
+    dependency: transitive
+    description:
+      name: lazy_memo
+      sha256: "3c58757c2bac430caa0467a4a86f8c69f24b17a4a6144f044b51024f5a915379"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   logging:
     dependency: "direct main"
     description:
@@ -488,6 +520,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  quote_buffer:
+    dependency: transitive
+    description:
+      name: quote_buffer
+      sha256: a9eefd3ddc63bb310ffbc855b6ebe0363d925235485bc5778e28c492b1224b31
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
   rational:
     dependency: "direct main"
     description:

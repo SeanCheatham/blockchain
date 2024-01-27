@@ -14,8 +14,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../google/protobuf/struct.pb.dart' as $2;
-import '../google/protobuf/wrappers.pb.dart' as $3;
+import '../google/protobuf/struct.pb.dart' as $3;
+import '../google/protobuf/wrappers.pb.dart' as $4;
 
 class BlockId extends $pb.GeneratedMessage {
   factory BlockId({
@@ -1824,7 +1824,7 @@ class GraphEntry extends $pb.GeneratedMessage {
 class Vertex extends $pb.GeneratedMessage {
   factory Vertex({
     $core.String? label,
-    $2.Struct? data,
+    $3.Struct? data,
     LockAddress? edgeLockAddress,
   }) {
     final $result = create();
@@ -1845,7 +1845,7 @@ class Vertex extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Vertex', package: const $pb.PackageName(_omitMessageNames ? '' : 'blockchain.models'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'label')
-    ..aOM<$2.Struct>(2, _omitFieldNames ? '' : 'data', subBuilder: $2.Struct.create)
+    ..aOM<$3.Struct>(2, _omitFieldNames ? '' : 'data', subBuilder: $3.Struct.create)
     ..aOM<LockAddress>(3, _omitFieldNames ? '' : 'edgeLockAddress', protoName: 'edgeLockAddress', subBuilder: LockAddress.create)
     ..hasRequiredFields = false
   ;
@@ -1881,15 +1881,15 @@ class Vertex extends $pb.GeneratedMessage {
   void clearLabel() => clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Struct get data => $_getN(1);
+  $3.Struct get data => $_getN(1);
   @$pb.TagNumber(2)
-  set data($2.Struct v) { setField(2, v); }
+  set data($3.Struct v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasData() => $_has(1);
   @$pb.TagNumber(2)
   void clearData() => clearField(2);
   @$pb.TagNumber(2)
-  $2.Struct ensureData() => $_ensure(1);
+  $3.Struct ensureData() => $_ensure(1);
 
   @$pb.TagNumber(3)
   LockAddress get edgeLockAddress => $_getN(2);
@@ -1906,7 +1906,7 @@ class Vertex extends $pb.GeneratedMessage {
 class Edge extends $pb.GeneratedMessage {
   factory Edge({
     $core.String? label,
-    $2.Struct? data,
+    $3.Struct? data,
     TransactionOutputReference? a,
     TransactionOutputReference? b,
   }) {
@@ -1931,7 +1931,7 @@ class Edge extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'Edge', package: const $pb.PackageName(_omitMessageNames ? '' : 'blockchain.models'), createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'label')
-    ..aOM<$2.Struct>(2, _omitFieldNames ? '' : 'data', subBuilder: $2.Struct.create)
+    ..aOM<$3.Struct>(2, _omitFieldNames ? '' : 'data', subBuilder: $3.Struct.create)
     ..aOM<TransactionOutputReference>(3, _omitFieldNames ? '' : 'a', subBuilder: TransactionOutputReference.create)
     ..aOM<TransactionOutputReference>(4, _omitFieldNames ? '' : 'b', subBuilder: TransactionOutputReference.create)
     ..hasRequiredFields = false
@@ -1968,15 +1968,15 @@ class Edge extends $pb.GeneratedMessage {
   void clearLabel() => clearField(1);
 
   @$pb.TagNumber(2)
-  $2.Struct get data => $_getN(1);
+  $3.Struct get data => $_getN(1);
   @$pb.TagNumber(2)
-  set data($2.Struct v) { setField(2, v); }
+  set data($3.Struct v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasData() => $_has(1);
   @$pb.TagNumber(2)
   void clearData() => clearField(2);
   @$pb.TagNumber(2)
-  $2.Struct ensureData() => $_ensure(1);
+  $3.Struct ensureData() => $_ensure(1);
 
   @$pb.TagNumber(3)
   TransactionOutputReference get a => $_getN(2);
@@ -2463,8 +2463,8 @@ class PublicP2PState extends $pb.GeneratedMessage {
 class ConnectedPeer extends $pb.GeneratedMessage {
   factory ConnectedPeer({
     PeerId? peerId,
-    $3.StringValue? host,
-    $3.UInt32Value? port,
+    $4.StringValue? host,
+    $4.UInt32Value? port,
   }) {
     final $result = create();
     if (peerId != null) {
@@ -2484,8 +2484,8 @@ class ConnectedPeer extends $pb.GeneratedMessage {
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'ConnectedPeer', package: const $pb.PackageName(_omitMessageNames ? '' : 'blockchain.models'), createEmptyInstance: create)
     ..aOM<PeerId>(1, _omitFieldNames ? '' : 'peerId', protoName: 'peerId', subBuilder: PeerId.create)
-    ..aOM<$3.StringValue>(2, _omitFieldNames ? '' : 'host', subBuilder: $3.StringValue.create)
-    ..aOM<$3.UInt32Value>(3, _omitFieldNames ? '' : 'port', subBuilder: $3.UInt32Value.create)
+    ..aOM<$4.StringValue>(2, _omitFieldNames ? '' : 'host', subBuilder: $4.StringValue.create)
+    ..aOM<$4.UInt32Value>(3, _omitFieldNames ? '' : 'port', subBuilder: $4.UInt32Value.create)
     ..hasRequiredFields = false
   ;
 
@@ -2522,26 +2522,26 @@ class ConnectedPeer extends $pb.GeneratedMessage {
   PeerId ensurePeerId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $3.StringValue get host => $_getN(1);
+  $4.StringValue get host => $_getN(1);
   @$pb.TagNumber(2)
-  set host($3.StringValue v) { setField(2, v); }
+  set host($4.StringValue v) { setField(2, v); }
   @$pb.TagNumber(2)
   $core.bool hasHost() => $_has(1);
   @$pb.TagNumber(2)
   void clearHost() => clearField(2);
   @$pb.TagNumber(2)
-  $3.StringValue ensureHost() => $_ensure(1);
+  $4.StringValue ensureHost() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $3.UInt32Value get port => $_getN(2);
+  $4.UInt32Value get port => $_getN(2);
   @$pb.TagNumber(3)
-  set port($3.UInt32Value v) { setField(3, v); }
+  set port($4.UInt32Value v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasPort() => $_has(2);
   @$pb.TagNumber(3)
   void clearPort() => clearField(3);
   @$pb.TagNumber(3)
-  $3.UInt32Value ensurePort() => $_ensure(2);
+  $4.UInt32Value ensurePort() => $_ensure(2);
 }
 
 

@@ -15,7 +15,7 @@ class Genesis {
   static const slot = Int64.ZERO;
   static final parentSlot = Int64(-1);
 
-  static final parentId = BlockId()..value = Int8List(32);
+  static final parentId = BlockId()..value = Uint8List(32);
   static final operationalCertificate = OperationalCertificate()
     ..parentVK = (VerificationKeyKesProduct()
       ..value = _emptyBytes(32)

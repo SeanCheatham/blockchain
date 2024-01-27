@@ -18,13 +18,15 @@ const BroadcastBlockReq$json = {
   '1': 'BroadcastBlockReq',
   '2': [
     {'1': 'block', '3': 1, '4': 1, '5': 11, '6': '.blockchain.models.Block', '8': {}, '10': 'block'},
+    {'1': 'rewardTransaction', '3': 2, '4': 1, '5': 11, '6': '.blockchain.models.Transaction', '10': 'rewardTransaction'},
   ],
 };
 
 /// Descriptor for `BroadcastBlockReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List broadcastBlockReqDescriptor = $convert.base64Decode(
     'ChFCcm9hZGNhc3RCbG9ja1JlcRI4CgVibG9jaxgBIAEoCzIYLmJsb2NrY2hhaW4ubW9kZWxzLk'
-    'Jsb2NrQgj6QgWKAQIQAVIFYmxvY2s=');
+    'Jsb2NrQgj6QgWKAQIQAVIFYmxvY2sSTAoRcmV3YXJkVHJhbnNhY3Rpb24YAiABKAsyHi5ibG9j'
+    'a2NoYWluLm1vZGVscy5UcmFuc2FjdGlvblIRcmV3YXJkVHJhbnNhY3Rpb24=');
 
 @$core.Deprecated('Use broadcastBlockResDescriptor instead')
 const BroadcastBlockRes$json = {

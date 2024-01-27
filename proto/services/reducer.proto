@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package blockchain.services;
+
+import "validate/validate.proto";
+import 'models/core.proto';
+import "google/protobuf/struct.proto";
+
+service Reducer {
+    rpc CreateReducer(CreateReducerReq) returns (CreateReducerRes);
+    rpc CurrentReducerState(ReducerStateReq) returns (ReducerStateRes);
+    rpc StreamedReducerState(ReducerStateReq) returns (stream ReducerStateRes);
+}
+
+message CreateReducerReq {
+    string language = 1;
+    string code = 2;
+    google.protobuf.Struct input = 3 [(validate.rules).message.required = true];
+}
+
+message CreateReducerRes {
+    bytes id = 1;
+}
+
+message ReducerStateReq {
+    bytes id = 1;
+}
+
+message ReducerStateRes {
+    bytes id = 1;
+    blockchain.models.BlockId blockId = 2 [(validate.rules).message.required = true];
+    google.protobuf.Struct output = 3 [(validate.rules).message.required = true];
+}

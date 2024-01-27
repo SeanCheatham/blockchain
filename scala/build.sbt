@@ -62,6 +62,29 @@ lazy val core = project
   )
   .dependsOn(protobuf)
 
+lazy val reducer = project
+  .enablePlugins(DockerPlugin, JavaAppPackaging)
+  .settings(nodeDockerSettings*)
+  .in(file("reducer"))
+  .settings(
+    name := "blockchain-reducer",
+    libraryDependencies ++=
+      Dependencies.logging ++
+        Dependencies.cats ++
+        Dependencies.scalaCache ++
+        Dependencies.scodec ++
+        Dependencies.levelDbJni ++
+        Dependencies.fs2 ++
+        Dependencies.caseApp ++
+        Dependencies.mUnitTest ++
+        Dependencies.graalVM,
+    libraryDependencies += "io.grpc" % "grpc-netty-shaded" % scalapb.compiler.Version.grpcJavaVersion,
+    scalacOptions ++= Seq(
+      "-source:future"
+    )
+  )
+  .dependsOn(protobuf)
+
 lazy val copyProtobufTask =
   TaskKey[Unit]("copyProtobufTask", "Copy protobuf files from repository root")
 
