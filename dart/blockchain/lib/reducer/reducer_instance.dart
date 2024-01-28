@@ -10,71 +10,88 @@ import 'package:fast_base58/fast_base58.dart';
 import 'package:hashlib/hashlib.dart';
 import 'package:ribs_core/ribs_core.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:path/path.dart';
 
 class ReducerInstance {
   final String id;
-  final String language;
   final String code;
-  final Program program;
+  final Runtime runtime;
   final Ref<ReducerState> stateRef;
 
   ReducerInstance({
     required this.id,
-    required this.language,
     required this.code,
-    required this.program,
+    required this.runtime,
     required this.stateRef,
   });
 
+  static IO<ReducerInstance> load(Directory baseDir, String id) => IO
+      .pure(Directory("${baseDir.path}/$id"))
+      .flatMap((dir) => IO.fromFutureF(() async {
+            final code = await File("${dir.path}/code.dart").readAsString();
+            final programBytes =
+                await File("${dir.path}/code.dart").readAsBytes();
+            final runtime = Runtime(programBytes.buffer.asByteData());
+            final stateFile = await Directory("${dir.path}/states")
+                .list()
+                .whereType<File>()
+                .first;
+            final stateBytes = await stateFile.readAsBytes();
+            final struct = Struct.fromBuffer(stateBytes);
+            final idStr = basenameWithoutExtension(stateFile.path);
+            final blockId = decodeBlockId(idStr);
+            return (blockId, code, runtime, struct);
+          }))
+      .flatMap((r) => IO.ref(ReducerState(blockId: r.$1, state: r.$4)).map(
+          (stateRef) => ReducerInstance(
+              id: id, code: r.$2, runtime: r.$3, stateRef: stateRef)));
+
   static IO<ReducerInstance> init(
-          String language, String code, Struct input, Directory baseDir) =>
-      (language != "dart")
-          ? IO.raiseError(RuntimeException("Unsupported language"))
-          : IO
-              .delay(() {
-                final compiler = Compiler();
-                final program = compiler.compile({
-                  "user_reducer": {"main.dart": code}
-                });
-                return program;
-              })
-              .flatMap((program) => IO.delay(() {
-                    final runtime = Runtime.ofProgram(program);
-                    final initialState = runtime.executeLib(
-                            "package:user_reducer/main.dart", "init", [input])
-                        as Struct;
-                    return ReducerState(
-                        blockId: Genesis.parentId, state: initialState);
-                  }).tupleLeft(program))
-              .flatMap(
-                (r) => IO
-                    .delay(() => Base58Encode(blake2b256.convert([
-                          ...utf8.encode(language),
-                          ...utf8.encode(code)
-                        ]).bytes))
-                    .flatTap(
-                        (id) => r.$2.save(Directory("${baseDir.path}/$id")))
-                    .flatMap(
-                      (id) => IO.ref(r.$2).flatMap(
-                            (stateRef) => IO.fromFutureF(() async {
-                              final dir = Directory("${baseDir.path}/$id");
-                              await Directory("$dir/states")
-                                  .create(recursive: true);
-                              await File("${dir.path}/code.dart")
-                                  .writeAsString(code);
-                              await File("${dir.path}/program.evc")
-                                  .writeAsBytes(r.$1.write());
-                              return ReducerInstance(
-                                id: id,
-                                language: language,
-                                code: code,
-                                program: r.$1,
-                                stateRef: stateRef,
-                              );
-                            }),
-                          ),
-                    ),
-              );
+          String code, Struct input, Directory baseDir) =>
+      IO
+          .delay(() {
+            final compiler = Compiler();
+            final program = compiler.compile({
+              "user_reducer": {"main.dart": code}
+            });
+            return program;
+          })
+          .flatMap((program) => IO.delay(() {
+                final runtime = Runtime.ofProgram(program);
+                final initialState = runtime.executeLib(
+                        "package:user_reducer/main.dart", "init", [input])
+                    as Struct;
+                return (
+                  program,
+                  runtime,
+                  ReducerState(blockId: Genesis.parentId, state: initialState)
+                );
+              }))
+          .flatMap(
+            (r) => IO
+                .delay(() =>
+                    Base58Encode(blake2b256.convert(utf8.encode(code)).bytes))
+                .flatTap((id) => r.$3.save(Directory("${baseDir.path}/$id")))
+                .flatMap(
+                  (id) => IO.ref(r.$3).flatMap(
+                        (stateRef) => IO.fromFutureF(() async {
+                          final dir = Directory("${baseDir.path}/$id");
+                          await Directory("$dir/states")
+                              .create(recursive: true);
+                          await File("${dir.path}/code.dart")
+                              .writeAsString(code);
+                          await File("${dir.path}/program.evc")
+                              .writeAsBytes(r.$1.write());
+                          return ReducerInstance(
+                            id: id,
+                            code: code,
+                            runtime: r.$2,
+                            stateRef: stateRef,
+                          );
+                        }),
+                      ),
+                ),
+          );
 
   IO<ReducerState> applyBlock(FullBlock block) => _invoke(block, "applyBlock")
       .map((res) => ReducerState(blockId: block.header.id, state: res))
@@ -86,15 +103,14 @@ class ReducerInstance {
               ReducerState(blockId: block.header.parentHeaderId, state: res))
           .flatTap(stateRef.setValue);
 
-  IO<Struct> _invoke(FullBlock block, String functionName) =>
-      IO.delay(() => Runtime.ofProgram(program)).flatMap((runtime) => stateRef
-          .access()
-          .map((t) => t.$1)
-          .flatMap((state) => IO.delay(() => runtime.executeLib(
-                "package:user_reducer/main.dart",
-                functionName,
-                [state.blockId, state.state, block],
-              ) as Struct)));
+  IO<Struct> _invoke(FullBlock block, String functionName) => stateRef
+      .access()
+      .map((t) => t.$1)
+      .flatMap((state) => IO.delay(() => runtime.executeLib(
+            "package:user_reducer/main.dart",
+            functionName,
+            [state.blockId, state.state, block],
+          ) as Struct));
 }
 
 class ReducerState {
