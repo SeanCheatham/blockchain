@@ -1,10 +1,12 @@
 import 'package:blockchain/blockchain.dart';
 import 'package:blockchain/common/clock.dart';
 import 'package:blockchain/consensus/models/protocol_settings.dart';
+import 'package:blockchain/genesis.dart';
 import 'package:blockchain/traversal.dart';
 import 'package:blockchain_protobuf/models/core.pb.dart';
 import 'package:blockchain_protobuf/services/node_rpc.pbgrpc.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/transformers.dart';
 
 abstract class BlockchainView {
@@ -91,6 +93,31 @@ abstract class BlockchainView {
     );
     _clock = c;
     return c;
+  }
+
+  Stream<TraversalStep> traversalFrom(BlockId currentBlockId) {
+    missingBlockIds() async* {
+      late Int64 h;
+      if (currentBlockId == Genesis.parentId) {
+        h = Int64.ONE;
+      } else {
+        final currentHead = await getBlockHeaderOrRaise(currentBlockId);
+        assert(await getBlockIdAtHeight(currentHead.height) == currentBlockId,
+            "Fork");
+      }
+      while (true) {
+        final n = await getBlockIdAtHeight(h);
+        if (n == null)
+          break;
+        else {
+          yield n;
+          h += 1;
+        }
+      }
+    }
+
+    return ConcatEagerStream(
+        [missingBlockIds().map((id) => TraversalStep_Applied(id)), traversal]);
   }
 }
 

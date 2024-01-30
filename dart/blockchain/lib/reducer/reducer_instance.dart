@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:blockchain/blockchain_view.dart';
 import 'package:blockchain/codecs.dart';
 import 'package:blockchain/genesis.dart';
+import 'package:blockchain/traversal.dart';
 import 'package:blockchain_protobuf/google/protobuf/struct.pb.dart';
 import 'package:blockchain_protobuf/models/core.pb.dart';
 import 'package:dart_eval/dart_eval.dart';
 import 'package:fast_base58/fast_base58.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:hashlib/hashlib.dart';
+import 'package:quiver/async.dart';
 import 'package:ribs_core/ribs_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:path/path.dart';
@@ -111,6 +115,16 @@ class ReducerInstance {
             functionName,
             [state.blockId, state.state, block],
           ) as Struct));
+
+  Stream<ReducerState> follow(BlockchainView view) => Stream.fromFuture(
+          stateRef.value().map((s) => s.blockId).unsafeRunFuture())
+      .asyncExpand(view.traversalFrom)
+      .asyncMap((step) => IO
+          .fromFutureF(() => view.getFullBlockOrRaise(step.blockId))
+          .flatMap((block) => (step is TraversalStep_Applied)
+              ? applyBlock(block)
+              : unapplyBlock(block))
+          .unsafeRunFuture());
 }
 
 class ReducerState {
